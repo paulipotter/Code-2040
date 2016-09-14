@@ -6,25 +6,27 @@ from json import dumps, loads
 import requests, ast
 
 address = "http://challenge.code2040.org/api/prefix"
-
-dict = {"token" : "ae7949f1fc1a625459e2aed8ee66b992"}
-
-r = requests.post(address, data = dict)
-d = r.text
-d = ast.literal_eval(d)
+token = "ae7949f1fc1a625459e2aed8ee66b992"
+r = requests.post(address, data = {"token" : token})
+d = ast.literal_eval(r.text)
 
 prefix = d.get("prefix")
 array = d.get("array")
-arr = []
+send = {"token": token, "array":[]}
 
-print("Prefix: ", prefix)
+print(prefix)
 for word in array:
 	if not word.startswith(prefix):
-		arr.append(word)
-		print (word, prefix)
+		send["array"].append(word)
+		print(word)
+	else:
+		print(word, prefix)
+print(" ")
+		
+for word in send["array"]:
+	print (word)
 
-dict["array"] = arr
-
+print(send["array"])
 address = "http://challenge.code2040.org/api/prefix/validate"
-r = requests.post(address, data= dict)
+r = requests.post(address, data= send)
 print(r.text)
